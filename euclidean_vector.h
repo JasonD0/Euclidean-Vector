@@ -3,6 +3,7 @@
 #include <exception>
 #include <string>
 #include <memory>
+#include <vector>
 
 class EuclideanVectorError : public std::exception {
  public:
@@ -15,9 +16,15 @@ class EuclideanVectorError : public std::exception {
 class EuclideanVector {
  public:
   explicit EuclideanVector(int i);
+  explicit EuclideanVector(int i, double d);
+  explicit EuclideanVector(std::vector<double>::const_iterator begin,
+                           std::vector<double>::const_iterator end);
+  explicit EuclideanVector(const EuclideanVector& orig);
+  explicit EuclideanVector(EuclideanVector&& orig) noexcept;
+  ~EuclideanVector() = default;
   friend std::ostream& operator<<(std::ostream& os, const EuclideanVector& v);
-  // TODO(you): add more
+
  private:
+  int len_;
   std::unique_ptr<double[]> magnitudes_;
-  // TODO(you): add more
 };
