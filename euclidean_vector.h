@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <list>
 
 class EuclideanVectorError : public std::exception {
  public:
@@ -25,6 +26,14 @@ class EuclideanVector {
 
   EuclideanVector& operator=(const EuclideanVector& v);
   EuclideanVector& operator=(EuclideanVector&& v) noexcept;
+  double& operator[](int x);
+  double operator[](int x) const;
+  EuclideanVector& operator+=(const EuclideanVector& v);
+  EuclideanVector& operator-=(const EuclideanVector& v);
+  EuclideanVector& operator*=(int x);
+  EuclideanVector& operator/=(int x);
+  explicit operator std::vector<double>();
+  explicit operator std::list<double>();
 
   double at(int x);
   int GetNumDimensions();

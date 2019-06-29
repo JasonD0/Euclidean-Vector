@@ -3,6 +3,7 @@
 #include <algorithm>  // Look at these - they are helpful https://en.cppreference.com/w/cpp/algorithm
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 EuclideanVector::EuclideanVector(int i) : EuclideanVector(i, 0.0) {}
 
@@ -39,6 +40,78 @@ EuclideanVector::EuclideanVector(EuclideanVector&& orig) noexcept
   orig.magnitudes_.reset();
 }
 
+
+EuclideanVector& EuclideanVector::operator=(const EuclideanVector& v) {
+  len_ = v.len_;
+  magnitudes_ = std::make_unique<double[]>(len_);
+
+  for (int j = 0; j < len_; ++j) {
+    magnitudes_[j] = v.magnitudes_[j];
+  }
+
+  return *this;
+}
+
+EuclideanVector& EuclideanVector::operator=(EuclideanVector&& v) noexcept {
+  len_ = v.len_;
+  magnitudes_ = std::move(v.magnitudes_);
+
+  return *this;
+}
+
+double& EuclideanVector::operator[](int x) {
+  assert(x >= 0 && x < len_);
+  return this->magnitudes_[x];
+}
+
+double EuclideanVector::operator[](int x) const {
+  assert(x >= 0 && x < len_);
+  return this->magnitudes_[x];
+}
+
+EuclideanVector& EuclideanVector::operator+=(const EuclideanVector& v) {
+  if (len_ != v.len_) {
+    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+  }
+
+  for (int j = 0; j < len_; ++j) {
+    magnitudes_[j] += v.magnitudes_[j];
+  }
+
+  return *this;
+}
+
+EuclideanVector& EuclideanVector::operator-=(const EuclideanVector& v) {
+  if (len_ != v.len_) {
+    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+  }
+
+  for (int j = 0; j < len_; ++j) {
+    magnitudes_[j] -= v.magnitudes_[j];
+  }
+
+  return *this;
+}
+
+EuclideanVector& EuclideanVector::operator*=(int x) {
+  for (int j = 0; j < len_; ++j) {
+    magnitudes_[j] *= x;
+  }
+
+  return *this;
+}
+
+EuclideanVector& EuclideanVector::operator/=(int x) {
+  if (x == 0) {
+    throw EuclideanVectorError("Invalid vector division by 0");
+  }
+
+  for (int j = 0; j < len_; ++j) {
+    magnitudes_[j] /= x;
+  }
+
+  return *this;
+}
 
 
 
