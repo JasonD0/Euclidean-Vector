@@ -22,6 +22,15 @@ class EuclideanVector {
   explicit EuclideanVector(const EuclideanVector& orig);
   explicit EuclideanVector(EuclideanVector&& orig) noexcept;
   ~EuclideanVector() = default;
+
+  EuclideanVector& operator=(const EuclideanVector& v);
+  EuclideanVector& operator=(EuclideanVector&& v) noexcept;
+
+  double at(int x);
+  int GetNumDimensions();
+  double GetEuclideanNorm();
+  //EuclideanVector CreateUnitVector();
+
   friend std::ostream& operator<<(std::ostream& os, const EuclideanVector& v);
 
  private:
