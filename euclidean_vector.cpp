@@ -35,9 +35,10 @@ EuclideanVector::EuclideanVector(const EuclideanVector& orig)
 }
 
 EuclideanVector::EuclideanVector(EuclideanVector&& orig) noexcept
-    : len_{orig.len_}, magnitudes_{std::move(orig.magnitudes_)} {
+    : len_{orig.len_},
+      magnitudes_{std::move(orig.magnitudes_)} {
   orig.len_ = 0;
-  orig.magnitudes_.reset();
+  orig.magnitudes_ = nullptr;
 }
 
 
@@ -113,7 +114,25 @@ EuclideanVector& EuclideanVector::operator/=(int x) {
   return *this;
 }
 
+EuclideanVector::operator std::vector<double>() {
+  std::vector<double> v;
 
+  for (int j = 0; j < len_; ++j) {
+    v.push_back(magnitudes_[j]);
+  }
+
+  return v;
+}
+
+EuclideanVector::operator std::list<double>() {
+  std::list<double> l;
+
+  for (int j = 0; j < len_; ++j) {
+    l.push_back(magnitudes_[j]);
+  }
+
+  return l;
+}
 
 
 double EuclideanVector::at(int x) {
@@ -140,24 +159,122 @@ double EuclideanVector::GetEuclideanNorm() {
 
   return std::sqrt(sum);
 }
-/*
+
 EuclideanVector EuclideanVector::CreateUnitVector() {
   if (this->GetNumDimensions() == 0) {
     throw EuclideanVectorError("EuclideanVector with no dimensions does not have a unit vector");
   }
 
-  EuclideanVector ev(len_);
+  std::vector<double> v;
 
   double norm = this->GetEuclideanNorm();
   for (int j = 0; j < len_; ++j) {
-    ev.magnitudes_[j] = magnitudes_[j]/norm;
+    v.push_back(magnitudes_[j]/norm);
   }
 
-  return ev;
-}*/
+  return EuclideanVector{v.begin(), v.end()};
+}
+
+
+bool operator==(const EuclideanVector& v1, const EuclideanVector& v2) {
+  if (v1.len_ != v2.len_) {
+    return false;
+  }
+
+  for (int j = 0; j < v1.len_; ++j) {
+    if (v1.magnitudes_[j] != v2.magnitudes_[j]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool operator!=(const EuclideanVector& v1, const EuclideanVector& v2) {
+  return !(v1 == v2);
+}
+
+EuclideanVector operator+(const EuclideanVector& v1, const EuclideanVector& v2) {
+  if (v1.len_ != v2.len_) {
+    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+  }
+
+  std::vector<double> v;
+
+  for (int j = 0; j < v1.len_; ++j) {
+    v.push_back(v1.magnitudes_[j] + v2.magnitudes_[j]);
+  }
+
+  return EuclideanVector{v.begin(), v.end()};
+}
+
+EuclideanVector operator-(const EuclideanVector& v1, const EuclideanVector& v2) {
+  if (v1.len_ != v2.len_) {
+    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+  }
+
+  std::vector<double> v;
+
+  for (int j = 0; j < v1.len_; ++j) {
+    v.push_back(v1.magnitudes_[j] - v2.magnitudes_[j]);
+  }
+
+  return EuclideanVector{v.begin(), v.end()};
+}
+
+double operator*(const EuclideanVector& v1, const EuclideanVector& v2) {
+  if (v1.len_ != v2.len_) {
+    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+  }
+
+  double sum {0.0};
+
+  for (int j = 0; j < v1.len_; ++j) {
+    sum += v1.magnitudes_[j] * v2.magnitudes_[j];
+  }
+
+  return sum;
+}
+
+EuclideanVector operator*(const EuclideanVector& ev, const int& i) {
+  std::vector<double> v;
+
+  for (int j = 0; j < ev.len_; ++j) {
+    v.push_back(ev.magnitudes_[j] * i);
+  }
+
+  return EuclideanVector{v.begin(), v.end()};
+}
+
+EuclideanVector operator*(const int& i, const EuclideanVector& ev) {
+  /*for (int j = 0; j < len_; ++j) {
+    this->magnitudes_[j] = v1.magnitudes_[j] * i;
+  }
+*/
+  return ev*i;
+}
+
+EuclideanVector operator/(const EuclideanVector& ev, const int& i) {
+  if (i == 0) {
+    throw EuclideanVectorError("Invalid vector division by 0");
+  }
+
+  std::vector<double> v;
+
+  for (int j = 0; j < ev.len_; ++j) {
+    v.push_back(ev.magnitudes_[j] / i);
+  }
+
+  return EuclideanVector{v.begin(), v.end()};
+}
 
 std::ostream& operator<<(std::ostream& os, const EuclideanVector& v) {
   int len = v.len_;
+
+  if (len == 0) {
+    os << "[]";
+    return os;
+  }
 
   os << "[";
   for (int j = 0; j < len - 1; ++j) {
@@ -168,4 +285,3 @@ std::ostream& operator<<(std::ostream& os, const EuclideanVector& v) {
 
   return os;
 }
-

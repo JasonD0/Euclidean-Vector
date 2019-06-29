@@ -21,7 +21,7 @@ class EuclideanVector {
   explicit EuclideanVector(std::vector<double>::const_iterator begin,
                            std::vector<double>::const_iterator end);
   explicit EuclideanVector(const EuclideanVector& orig);
-  explicit EuclideanVector(EuclideanVector&& orig) noexcept;
+  EuclideanVector(EuclideanVector&& orig) noexcept;
   ~EuclideanVector() = default;
 
   EuclideanVector& operator=(const EuclideanVector& v);
@@ -38,8 +38,16 @@ class EuclideanVector {
   double at(int x);
   int GetNumDimensions();
   double GetEuclideanNorm();
-  //EuclideanVector CreateUnitVector();
+  EuclideanVector CreateUnitVector();
 
+  friend bool operator==(const EuclideanVector& v1, const EuclideanVector& v2);
+  friend bool operator!=(const EuclideanVector& v1, const EuclideanVector& v2);
+  friend EuclideanVector operator+(const EuclideanVector& v1, const EuclideanVector& v2);
+  friend EuclideanVector operator-(const EuclideanVector& v1, const EuclideanVector& v2);
+  friend double operator*(const EuclideanVector& v1, const EuclideanVector& v2);
+  friend EuclideanVector operator*(const EuclideanVector& ev, const int& i);
+  friend EuclideanVector operator*(const int& i, const EuclideanVector& ev);
+  friend EuclideanVector operator/(const EuclideanVector& ev, const int& i);
   friend std::ostream& operator<<(std::ostream& os, const EuclideanVector& v);
 
  private:
