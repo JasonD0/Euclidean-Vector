@@ -27,11 +27,15 @@ EuclideanVector::EuclideanVector(std::vector<double>::const_iterator begin,
 }
 
 EuclideanVector::EuclideanVector(const EuclideanVector& orig)
-    : len_{orig.len_} {
-  //magnitudes_  orig.magnitudes_;
+    : len_{orig.len_},
+      magnitudes_{std::make_unique<double[]>(orig.len_)} {
+  for (int j = 0; j < len_; j++) {
+    magnitudes_[j] = orig.magnitudes_[j];
+  }
 }
 
 EuclideanVector::EuclideanVector(EuclideanVector&& orig) noexcept
-    : len_{orig.len_} {
+    : len_{orig.len_}, magnitudes_{std::move(orig.magnitudes_)} {
   orig.len_ = 0;
+  orig.magnitudes_.reset();
 }
