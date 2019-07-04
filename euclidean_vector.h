@@ -1,4 +1,5 @@
-// TODO(you): Include header guards
+#ifndef ASSIGNMENTS_EV_EUCLIDEAN_VECTOR_H_
+#define ASSIGNMENTS_EV_EUCLIDEAN_VECTOR_H_
 
 #include <exception>
 #include <string>
@@ -20,7 +21,7 @@ class EuclideanVector {
   explicit EuclideanVector(int i, double d);
   explicit EuclideanVector(std::vector<double>::const_iterator begin,
                            std::vector<double>::const_iterator end);
-  explicit EuclideanVector(const EuclideanVector& orig);
+  EuclideanVector(const EuclideanVector& orig);
   EuclideanVector(EuclideanVector&& orig) noexcept;
   ~EuclideanVector() = default;
 
@@ -54,3 +55,5 @@ class EuclideanVector {
   int len_;
   std::unique_ptr<double[]> magnitudes_;
 };
+
+#endif

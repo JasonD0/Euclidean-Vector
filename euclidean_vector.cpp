@@ -7,9 +7,9 @@
 
 EuclideanVector::EuclideanVector(int i) : EuclideanVector(i, 0.0) {}
 
-EuclideanVector::EuclideanVector(int i, double d) : len_{(i == 0) ? 1 : i} {
-  magnitudes_ = std::make_unique<double[]>(len_);
-
+EuclideanVector::EuclideanVector(int i, double d)
+    : len_{(i == 0) ? 1 : i},
+      magnitudes_{std::make_unique<double[]>(len_)} {
   for (int j = 0; j < len_; ++j) {
     magnitudes_[j] = d;
   }
@@ -18,7 +18,6 @@ EuclideanVector::EuclideanVector(int i, double d) : len_{(i == 0) ? 1 : i} {
 EuclideanVector::EuclideanVector(std::vector<double>::const_iterator begin,
                                  std::vector<double>::const_iterator end) {
   len_ = end - begin;
-
   magnitudes_ = std::make_unique<double[]>(len_);
 
   for (int j = 0; j < len_; ++j) {
@@ -35,7 +34,7 @@ EuclideanVector::EuclideanVector(const EuclideanVector& orig)
 }
 
 EuclideanVector::EuclideanVector(EuclideanVector&& orig) noexcept
-    : len_{orig.len_},
+    : len_{std::move(orig.len_)},
       magnitudes_{std::move(orig.magnitudes_)} {
   orig.len_ = 0;
   orig.magnitudes_ = nullptr;
@@ -163,6 +162,10 @@ double EuclideanVector::GetEuclideanNorm() {
 EuclideanVector EuclideanVector::CreateUnitVector() {
   if (this->GetNumDimensions() == 0) {
     throw EuclideanVectorError("EuclideanVector with no dimensions does not have a unit vector");
+  }
+
+  if (this->GetEuclideanNorm() == 0) {
+    throw EuclideanVectorError("EuclideanVector with euclidean normal of 0 does not have a unit vector");
   }
 
   std::vector<double> v;
