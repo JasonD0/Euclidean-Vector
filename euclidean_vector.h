@@ -2,15 +2,16 @@
 #define ASSIGNMENTS_EV_EUCLIDEAN_VECTOR_H_
 
 #include <exception>
-#include <string>
-#include <memory>
-#include <vector>
 #include <list>
+#include <memory>
+#include <string>
+#include <vector>
 
 class EuclideanVectorError : public std::exception {
  public:
   explicit EuclideanVectorError(const std::string& what) : what_(what) {}
-  const char* what() const noexcept{ return what_.c_str(); }
+  const char* what() const noexcept { return what_.c_str(); }
+
  private:
   std::string what_;
 };
@@ -27,19 +28,20 @@ class EuclideanVector {
 
   EuclideanVector& operator=(const EuclideanVector& v);
   EuclideanVector& operator=(EuclideanVector&& v) noexcept;
-  double& operator[](int x);
-  double operator[](int x) const;
+  double& operator[](const int& x);
+  double operator[](const int& x) const;
   EuclideanVector& operator+=(const EuclideanVector& v);
   EuclideanVector& operator-=(const EuclideanVector& v);
-  EuclideanVector& operator*=(int x);
-  EuclideanVector& operator/=(int x);
-  explicit operator std::vector<double>();
-  explicit operator std::list<double>();
+  EuclideanVector& operator*=(const int& x);
+  EuclideanVector& operator/=(const int& x);
+  explicit operator std::vector<double>() const;
+  explicit operator std::list<double>() const;
 
-  double at(int x);
-  int GetNumDimensions();
-  double GetEuclideanNorm();
-  EuclideanVector CreateUnitVector();
+  double& at(const int& x);
+  double at(const int& x) const;
+  int GetNumDimensions() const;
+  double GetEuclideanNorm() const;
+  EuclideanVector CreateUnitVector() const;
 
   friend bool operator==(const EuclideanVector& v1, const EuclideanVector& v2);
   friend bool operator!=(const EuclideanVector& v1, const EuclideanVector& v2);
@@ -56,4 +58,4 @@ class EuclideanVector {
   std::unique_ptr<double[]> magnitudes_;
 };
 
-#endif
+#endif  // ASSIGNMENTS_EV_EUCLIDEAN_VECTOR_H_
