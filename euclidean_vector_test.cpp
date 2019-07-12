@@ -8,7 +8,12 @@
    exceptions or assertions occur are also not tested.
 
 */
+#include <exception>
+#include <list>
+#include <memory>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include "assignments/ev/euclidean_vector.h"
 #include "catch.h"
@@ -119,7 +124,7 @@ SCENARIO("Type Conversions") {
 }
 
 SCENARIO("Using Subscript") {
-  GIVEN("a EuclideanVector and an integer") {
+  GIVEN("a EuclideanVector and an index") {
     std::vector<double> v{4.4, 2.1, 9.5};
     EuclideanVector ev{v.begin(), v.end()};
     int i = 2;

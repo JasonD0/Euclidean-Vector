@@ -32,8 +32,8 @@ class EuclideanVector {
   double operator[](const int& x) const;
   EuclideanVector& operator+=(const EuclideanVector& v);
   EuclideanVector& operator-=(const EuclideanVector& v);
-  EuclideanVector& operator*=(const int& x);
-  EuclideanVector& operator/=(const int& x);
+  EuclideanVector& operator*=(const double x);
+  EuclideanVector& operator/=(const double x);
   explicit operator std::vector<double>() const;
   explicit operator std::list<double>() const;
 
@@ -48,9 +48,9 @@ class EuclideanVector {
   friend EuclideanVector operator+(const EuclideanVector& v1, const EuclideanVector& v2);
   friend EuclideanVector operator-(const EuclideanVector& v1, const EuclideanVector& v2);
   friend double operator*(const EuclideanVector& v1, const EuclideanVector& v2);
-  friend EuclideanVector operator*(const EuclideanVector& ev, const int& i);
-  friend EuclideanVector operator*(const int& i, const EuclideanVector& ev);
-  friend EuclideanVector operator/(const EuclideanVector& ev, const int& i);
+  friend EuclideanVector operator*(const EuclideanVector& ev, const double i);
+  friend EuclideanVector operator*(const double i, const EuclideanVector& ev);
+  friend EuclideanVector operator/(const EuclideanVector& ev, const double i);
   friend std::ostream& operator<<(std::ostream& os, const EuclideanVector& v);
 
  private:

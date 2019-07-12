@@ -3,8 +3,14 @@
 #include <algorithm>  // Look at these - they are helpful https://en.cppreference.com/w/cpp/algorithm
 #include <cassert>
 #include <cmath>
+#include <exception>
 #include <iostream>
+#include <list>
+#include <memory>
+#include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 /**
  * Default Constructor
@@ -132,7 +138,9 @@ double EuclideanVector::operator[](const int& x) const {
  */
 EuclideanVector& EuclideanVector::operator+=(const EuclideanVector& v) {
   if (len_ != v.len_) {
-    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+    std::ostringstream oss;
+    oss << "Dimensions of LHS(" << len_ << ") and RHS(" << v.len_ << ") do not match";
+    throw EuclideanVectorError(oss.str());
   }
 
   for (int j = 0; j < len_; ++j) {
@@ -151,7 +159,9 @@ EuclideanVector& EuclideanVector::operator+=(const EuclideanVector& v) {
  */
 EuclideanVector& EuclideanVector::operator-=(const EuclideanVector& v) {
   if (len_ != v.len_) {
-    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+    std::ostringstream oss;
+    oss << "Dimensions of LHS(" << len_ << ") and RHS(" << v.len_ << ") do not match";
+    throw EuclideanVectorError(oss.str());
   }
 
   for (int j = 0; j < len_; ++j) {
@@ -167,7 +177,7 @@ EuclideanVector& EuclideanVector::operator-=(const EuclideanVector& v) {
  * @param x   the scalar
  * @return    the current Euclidean Vector object containing each scaled value
  */
-EuclideanVector& EuclideanVector::operator*=(const int& x) {
+EuclideanVector& EuclideanVector::operator*=(const double x) {
   for (int j = 0; j < len_; ++j) {
     magnitudes_[j] *= x;
   }
@@ -179,9 +189,9 @@ EuclideanVector& EuclideanVector::operator*=(const int& x) {
  * Scalar division of the current Euclidean Vector object
  *  divides each element of the current Euclidean Vector object by the scalar
  * @param x   the scalar
- * @return    the current EuclideanVector object containg each scaled value
+ * @return    the current EuclideanVector object containing each scaled value
  */
-EuclideanVector& EuclideanVector::operator/=(const int& x) {
+EuclideanVector& EuclideanVector::operator/=(const double x) {
   if (x == 0) {
     throw EuclideanVectorError("Invalid vector division by 0");
   }
@@ -230,7 +240,9 @@ EuclideanVector::operator std::list<double>() const {
  */
 double& EuclideanVector::at(const int& x) {
   if (x < 0 || x >= len_) {
-    throw EuclideanVectorError("Index X is not valid for this EuclideanVector object");
+    std::ostringstream oss;
+    oss << "Index " << x << " is not valid for this EuclideanVector object";
+    throw EuclideanVectorError(oss.str());
   }
 
   return magnitudes_[x];
@@ -243,7 +255,9 @@ double& EuclideanVector::at(const int& x) {
  */
 double EuclideanVector::at(const int& x) const {
   if (x < 0 || x >= len_) {
-    throw EuclideanVectorError("Index X is not valid for this EuclideanVector object");
+    std::ostringstream oss;
+    oss << "Index " << x << " is not valid for this EuclideanVector object";
+    throw EuclideanVectorError(oss.str());
   }
 
   return magnitudes_[x];
@@ -345,7 +359,9 @@ bool operator!=(const EuclideanVector& v1, const EuclideanVector& v2) {
  */
 EuclideanVector operator+(const EuclideanVector& v1, const EuclideanVector& v2) {
   if (v1.len_ != v2.len_) {
-    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+    std::ostringstream oss;
+    oss << "Dimensions of LHS(" << v1.len_ << ") and RHS(" << v2.len_ << ") do not match";
+    throw EuclideanVectorError(oss.str());
   }
 
   std::vector<double> v;
@@ -366,7 +382,9 @@ EuclideanVector operator+(const EuclideanVector& v1, const EuclideanVector& v2) 
  */
 EuclideanVector operator-(const EuclideanVector& v1, const EuclideanVector& v2) {
   if (v1.len_ != v2.len_) {
-    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+    std::ostringstream oss;
+    oss << "Dimensions of LHS(" << v1.len_ << ") and RHS(" << v2.len_ << ") do not match";
+    throw EuclideanVectorError(oss.str());
   }
 
   std::vector<double> v;
@@ -388,7 +406,9 @@ EuclideanVector operator-(const EuclideanVector& v1, const EuclideanVector& v2) 
  */
 double operator*(const EuclideanVector& v1, const EuclideanVector& v2) {
   if (v1.len_ != v2.len_) {
-    throw EuclideanVectorError("Dimensions of LHS(X) and RHS(Y) do not match");
+    std::ostringstream oss;
+    oss << "Dimensions of LHS(" << v1.len_ << ") and RHS(" << v2.len_ << ") do not match";
+    throw EuclideanVectorError(oss.str());
   }
 
   double sum{0.0};
@@ -407,7 +427,7 @@ double operator*(const EuclideanVector& v1, const EuclideanVector& v2) {
  * @param i     the scalar
  * @return      a Euclidean Vector containing the scaled values
  */
-EuclideanVector operator*(const EuclideanVector& ev, const int& i) {
+EuclideanVector operator*(const EuclideanVector& ev, const double i) {
   std::vector<double> v;
 
   for (int j = 0; j < ev.len_; ++j) {
@@ -424,7 +444,7 @@ EuclideanVector operator*(const EuclideanVector& ev, const int& i) {
  * @param ev    a Euclidean Vector
  * @return      a Euclidean Vector containing the scaled values
  */
-EuclideanVector operator*(const int& i, const EuclideanVector& ev) {
+EuclideanVector operator*(const double i, const EuclideanVector& ev) {
   return ev * i;
 }
 
@@ -435,7 +455,7 @@ EuclideanVector operator*(const int& i, const EuclideanVector& ev) {
  * @param i     the scalar
  * @return      a Euclidean Vector containing the scaled values
  */
-EuclideanVector operator/(const EuclideanVector& ev, const int& i) {
+EuclideanVector operator/(const EuclideanVector& ev, const double i) {
   if (i == 0) {
     throw EuclideanVectorError("Invalid vector division by 0");
   }
